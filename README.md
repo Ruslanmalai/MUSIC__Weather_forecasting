@@ -24,8 +24,11 @@ Some of the weather measurements are also taken by spectral detectors. Readings 
 from the weather station seem to be more accurate and trustworthy. Thus, in future forecasting the detectors weather measurements are not taken
 into consideration.
 
-**External Dataset**. The external dataset is taken from this [website](https://rp5.ru/Weather_archive_in_Hamilton_(airport),_Canada,_METAR). 
-It is also available in the [repo](https://github.com/Ruslanmalai/MUSIC/blob/master/data/external%20data.xls).
+**External Dataset**. The external dataset is taken from this [website](https://rp5.ru/Weather_archive_in_Hamilton_(airport),_Canada,_METAR). It is also available in the [repo](https://github.com/Ruslanmalai/MUSIC/blob/master/data/external%20data.xls).
+
+
+**NASA Ozone data**. The external dataset with daily ozone level is taken from the [NASA Ozone Watch](https://ozonewatch.gsfc.nasa.gov/monthly/SH.html) database. The NASA data is compared with the experimental ozone data in the
+Data Exploration section.
 
 ### Spectral Irradiance
 The spectral irradiance data is provided by a set of different spectral detectors:
