@@ -28,7 +28,7 @@ into consideration.
 
 
 **NASA Ozone data**. The external dataset with daily ozone level is taken from the [NASA Ozone Watch](https://ozonewatch.gsfc.nasa.gov/monthly/SH.html) database. The NASA data is compared with the experimental ozone data in the
-Data Exploration section.
+Data Exploration section. The data was scraped with the help of selfmade web scraper [Nasa_scraper](https://github.com/Ruslanmalai/MUSIC/blob/master/Nasa_scraper.py).
 
 ### Spectral Irradiance
 The spectral irradiance data is provided by a set of different spectral detectors:
