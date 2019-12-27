@@ -59,10 +59,3 @@ class Nasa_scraper(object):
         df = pd.DataFrame(data = self.ozone, index = self.date_time, columns = ['nasa_ozone'])
         return df
     
-#if __name__ == '__main__':
-#    start_date = '20190601'
-#    end_date = '20191217'
-#    nasa_scr = Nasa_scraper(start_date, end_date)
-#    #print(nasa_scr.useful_files)
-#    #print(nasa_scr.get_data())
-#    print(nasa_scr.give_ozone_df())
