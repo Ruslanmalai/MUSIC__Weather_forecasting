@@ -1,8 +1,12 @@
 import numpy as np
+
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import TimeSeriesSplit
+from scipy.optimize import minimize              # for function minimization
 #import matplotlib.pyplot as plt
 
 
-class HoltWinters:
+class HoltWinters(object):
     
     """
     Holt-Winters model with the anomalies detection using Brutlag method
@@ -16,14 +20,15 @@ class HoltWinters:
     """
     
     
-    def __init__(self, series, slen, alpha, beta, gamma, n_preds, scaling_factor=1.96):
-        self.series = series
+    def __init__(self, slen, n_preds, train_hours, scaling_factor=1.96):
+        #self.series = series
         self.slen = slen
-        self.alpha = alpha
-        self.beta = beta
-        self.gamma = gamma
+#        self.alpha = alpha
+#        self.beta = beta
+#        self.gamma = gamma
         self.n_preds = n_preds
         self.scaling_factor = scaling_factor
+        self.train_hours = train_hours
         
         
     def initial_trend(self):
@@ -108,5 +113,65 @@ class HoltWinters:
             self.Smooth.append(smooth)
             self.Trend.append(trend)
             self.Season.append(seasonals[i%self.slen])
+            self.train_result = self.result[:self.n_pred]
             
 
+    def CVscore(self, params, series, loss_function = mean_squared_error):
+        self.alpha = params[0]
+        self.beta = params[1]
+        self.gamma = params[2]
+        
+        errors = []
+        values = series.values
+        
+        num_splits = int(len(series)/self.slen)
+        tscv = TimeSeriesSplit(n_splits = num_splits, max_train_size = self.train_hours)
+        
+        # iterating over folds, train model on each, forecast and calculate error
+        for train, test in tscv.split(values):
+
+        #    model = HoltWinters(series=values[train], slen=slen, 
+        #                    alpha=alpha, beta=beta, gamma=gamma, n_preds=len(test))
+            self.series = values[train]
+            
+            self.triple_exponential_smoothing()
+        
+            predictions = self.result[-len(test):]
+            actual = values[test]
+            error = loss_function(predictions, actual)
+            errors.append(error)
+        
+        return np.mean(np.array(errors))
+    
+    def fit(self, series):
+        # initializing model parameters alpha, beta and gamma
+        self.train_series = series
+        self.series = series
+        x = [0, 0, 0]
+        
+        # Minimizing the loss function 
+        opt = minimize(self.CVscore, x0=x, 
+                       args=(self.series, mean_squared_error), 
+                       method="TNC", bounds = ((0, 1), (0, 1), (0, 1))
+                       )
+        # Take optimal values...
+        self.alpha, self.beta, self.gamma = opt.x
+        
+    def predict(self):
+        self.series = self.train_series
+        self.triple_exponential_smoothing()
+        return self.result[-self.n_preds:]
+         
+        
+        
+        
+        
+        
+        
+        
+        
+    
+        
+        
+        
+        
