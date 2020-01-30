@@ -113,7 +113,7 @@ class HoltWinters(object):
             self.Smooth.append(smooth)
             self.Trend.append(trend)
             self.Season.append(seasonals[i%self.slen])
-            self.train_result = self.result[:self.n_pred]
+            self.train_result = self.result[:-self.n_preds]
             
 
     def CVscore(self, params, series, loss_function = mean_squared_error):
@@ -124,8 +124,11 @@ class HoltWinters(object):
         errors = []
         values = series.values
         
-        num_splits = int(len(series)/self.slen)
-        tscv = TimeSeriesSplit(n_splits = num_splits, max_train_size = self.train_hours)
+        num_splits = 10  
+        #num_splits = int(len(series)/self.slen)
+        #tscv = TimeSeriesSplit(n_splits = num_splits, max_train_size = self.train_hours)
+        tscv = TimeSeriesSplit(n_splits = num_splits)
+        
         
         # iterating over folds, train model on each, forecast and calculate error
         for train, test in tscv.split(values):
@@ -133,7 +136,7 @@ class HoltWinters(object):
         #    model = HoltWinters(series=values[train], slen=slen, 
         #                    alpha=alpha, beta=beta, gamma=gamma, n_preds=len(test))
             self.series = values[train]
-            
+            self.n_preds = len(test)
             self.triple_exponential_smoothing()
         
             predictions = self.result[-len(test):]
@@ -141,6 +144,7 @@ class HoltWinters(object):
             error = loss_function(predictions, actual)
             errors.append(error)
         
+        self.train_error = np.sqrt(np.mean(np.array(errors)))
         return np.mean(np.array(errors))
     
     def fit(self, series):
@@ -157,8 +161,14 @@ class HoltWinters(object):
         # Take optimal values...
         self.alpha, self.beta, self.gamma = opt.x
         
-    def predict(self):
-        self.series = self.train_series
+#    def predict(self):
+#        self.series = self.train_series
+#        self.triple_exponential_smoothing()
+#        return self.result[-self.n_preds:]
+        
+    def predict(self, series, n_preds):
+        self.series = series
+        self.n_preds = n_preds
         self.triple_exponential_smoothing()
         return self.result[-self.n_preds:]
          
