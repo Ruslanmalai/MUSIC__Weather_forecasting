@@ -36,9 +36,9 @@ The spectral irradiance data is provided by a set of different spectral detector
 
 # Data exploration and analysis
 
-**Please, use this [link](https://nbviewer.jupyter.org/github/Ruslanmalai/MUSIC/blob/master/EDA.ipynb) to open Data Analysis notebook**
+**Please, use this [link](https://nbviewer.jupyter.org/github/Ruslanmalai/MUSIC/blob/master/EDA.ipynb) to open Data Analysis notebook.**
 
-*In progress*
+The notebook provides an overview of all the data provided by MUSIC. Basic data cleaning and smoothing are performed in this part of the work. The initial dataset is divided into hourly and daily datasets. The hourly dataset will be used for univariate forecasting with statistical models like Holt-Winters or SARIMA. The hourly dataset contains 24 hour seasonality and therefore is useful for the abovementioned statistical models. The daily dataset will be used in multivariate analysis for multivariate forecasting. It also will be used for the investigation of hidden connections between different data columns. 
 
 # Forecasting
 
