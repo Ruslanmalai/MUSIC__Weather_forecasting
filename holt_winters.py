@@ -27,6 +27,7 @@ class HoltWinters(object):
 #        self.beta = beta
 #        self.gamma = gamma
         self.n_preds = n_preds
+        self.prediction_size = n_preds
         self.scaling_factor = scaling_factor
         self.train_hours = train_hours
         
@@ -124,7 +125,7 @@ class HoltWinters(object):
         errors = []
         values = series.values
         
-        num_splits = 10  
+        num_splits = 5  
         #num_splits = int(len(series)/self.slen)
         #tscv = TimeSeriesSplit(n_splits = num_splits, max_train_size = self.train_hours)
         tscv = TimeSeriesSplit(n_splits = num_splits)
@@ -161,14 +162,10 @@ class HoltWinters(object):
         # Take optimal values...
         self.alpha, self.beta, self.gamma = opt.x
         
-#    def predict(self):
-#        self.series = self.train_series
-#        self.triple_exponential_smoothing()
-#        return self.result[-self.n_preds:]
         
-    def predict(self, series, n_preds):
+    def predict(self, series):
         self.series = series
-        self.n_preds = n_preds
+        self.n_preds = self.prediction_size
         self.triple_exponential_smoothing()
         return self.result[-self.n_preds:]
          
